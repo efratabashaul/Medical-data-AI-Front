@@ -1,34 +1,36 @@
+import axios from 'axios';
 import { TellMeType } from '../types/tellMe.types';
 import axiosInstance from '../utils/axios';
 
-// הגדרה של הפונקציה AITellMe עם טיפוס ההחזרה הנכון TellMeType
 export const AITellMe = async (story: string): Promise<TellMeType> => {
     try {
-        // קריאת AXIOS מסוג GET עם פרמטרים ב-URL
         const response = await axiosInstance.get<TellMeType>(`/process_text`, {
             params: {
-                text: story  // שימוש בפרמטרים במקום body
+                text: story
             }
         });
-
-        // מחזיר את הנתונים מהשרת, שכבר אמורים להיות מסוג TellMeType
         return response.data;
     } catch (error) {
-        console.error('Error fetching data:', error);
-        throw error; // טיפול בשגיאה, כדי שהפונקציה לא תחזיר undefined במקרה של כשל
+        if (axios.isAxiosError(error) && error.response) {
+            console.error('Server Error:', error.response.data);
+            alert('שגיאה בשרת: ' + error.response.data.message);
+        } else {
+            console.error('Network or Other Error:', error);
+            alert('אירעה שגיאה ברשת או שגיאה אחרת.');
+        }
+        throw error; 
     }
 };
 
+
 export const Add = async (injuri: TellMeType): Promise<TellMeType> => {
     try {
-        // קריאת AXIOS מסוג POST עם פרמטרים ב-body ישירות
         const response = await axiosInstance.post<TellMeType>(`/process_text`, injuri);
-
-        // מחזיר את הנתונים מהשרת, שכבר אמורים להיות מסוג TellMeType
         return response.data;
     } catch (error) {
         console.error('Error fetching data:', error);
-        throw error; // טיפול בשגיאה, כדי שהפונקציה לא תחזיר undefined במקרה של כשל
+        alert('לא הזנת מספיק נתונים!')
+        throw error;
     }
 };
 

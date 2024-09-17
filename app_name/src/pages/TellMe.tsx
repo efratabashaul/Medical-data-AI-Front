@@ -1,95 +1,83 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import Stack from '@mui/material/Stack';
 import { AITellMe } from '../services/tellMe.service';
-import { WaitingPage } from "./waitingPage"; // עדכן את הנתיב בהתאם
-import { TellMeType } from "../types/tellMe.types";
-import * as pdfjsLib from 'pdfjs-dist';
-
+import { WaitingPage } from "./waitingPage";
+import { TellMeType } from "../types/tellMe.types"; 
+import mammoth from 'mammoth';
+import { useNavigate } from "react-router-dom";
+import pdfToText from 'react-pdftotext'
 
 
 export function TellMe() {
     const [story, setStory] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(false); // מצב טוען
-    const [result, setResult] = useState<TellMeType | null>(null); // הנתונים שיתקבלו.
+    const [loading, setLoading] = useState<boolean>(false); 
+    const [result, setResult] = useState<TellMeType | null>(null);
     const [fileContent, setFileContent] = useState<string | null>(null);
     const [fileName, setFileName] = useState<string | null>(null);
-    const navigate = useNavigate();  // כאן אנו משתמשים ב-useNavigate לצורך ניווט
+    const navigate=useNavigate()
 
-    // הוספת useEffect לצורך ניווט לאחר קבלת התוצאה
-    useEffect(() => {
-        if (result) {
-            console.log("result"+result.age);
-            
-            // ניווט לדף התוצאה כאשר יש נתונים
-            navigate('/check', { state: { result } });
-        }
-    }, [result, navigate]);
 
     const handleButtonClick = async () => {
-        setLoading(true); // הצגת דף הביניים
+        setLoading(true); 
         try {
-            const newS=story+fileContent
-            const result: TellMeType = await AITellMe(newS);
-            // console.log(result);
-            setResult(result); // שמירת התוצאה
+            if(story==""&&fileContent==null)
+                alert('נא העלה קובץ או ספר בקצרה את מה שקרה!')
+            else{
+                const newS = story + fileContent;
+                const result: TellMeType = await AITellMe(newS);
+                setResult(result); 
+                navigate('/check', { state: { result } })
+            }
+
         } catch (error) {
             console.error('Error:', error);
-            // ניתן להוסיף טיפול בשגיאות או העברת המשתמש לדף שגיאה
         } finally {
-            setLoading(false); // החזרת מצב הטוען
+            setLoading(false);
         }
     };
 
-    if (loading) {
-        return <WaitingPage />;
-    }
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const fileg = event.target.files?.[0]
+        pdfToText(fileg!)
+            .then(text => console.log(text))
+            .catch(error => console.error("Failed to extract text from pdf"))
 
+        const file = event.target.files?.[0];
+        if (file) {
+            setFileName(file.name);
 
-console.log("contebttt");
-console.log(fileContent);
-
-
-const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-        setFileName(file.name);
-
-        if (file.type === 'application/pdf') {
-            const text = await readPdf(file);
-            setFileContent(text);
-        } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-            const text = await readWord(file);
-            setFileContent(text);
-        } else {
-            const text = await readAsText(file);
-            setFileContent(text);
+            if (file.type === 'application/pdf') {
+                const text = await readPdf(file);
+                setFileContent(text);
+            } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                const text = await readWord(file);
+                setFileContent(text);
+            } else if (file.type === 'text/plain') {
+                const text = await readAsText(file);
+                setFileContent(text);
+            }else{
+                alert("יש להעלות קבצי PDF, WORD,TXT !נא נסה שוב!")
+            }
         }
-    }
-};
-
-
-
-    const readPdf = async (file: File) => {
-        const arrayBuffer = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-        let text = '';
-        for (let i = 0; i < pdf.numPages; i++) {
-            const page = await pdf.getPage(i + 1);
-            const content = await page.getTextContent();
-            text += content.items.map((item: any) => item.str).join(' ');
-        }
-        return text;
     };
+
+
+    const readPdf = async (file: File): Promise<string> => {
+        try {
+            const text = await pdfToText(file);
+            console.log(text); 
+            return text;
+        } catch (error) {
+            console.error("Failed to extract text from pdf:", error);
+            return ''; 
+        }
+    };
+    
 
     const readWord = async (file: File) => {
         const arrayBuffer = await file.arrayBuffer();
-        const doc = new Document(arrayBuffer);
-        let text = '';
-        doc.paragraphs.forEach(paragraph => {
-            text += paragraph.text + '\n';
-        });
-        return text;
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        return result.value;
     };
 
     const readAsText = async (file: File) => {
@@ -97,25 +85,8 @@ const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         return text;
     };
 
-
-    const handleSubmit = async () => {
-        if (!fileContent) {
-            alert("Please upload a file.");
-            return;
-        }
-
-        // שליחה לשרת Python
-        // try {
-        //     const response = await 
-
-        //     const result = await response.json();
-        //     console.log('Response from server:', result);
-        // } catch (error) {
-        //     console.error('Error uploading file:', error);
-        // }
-    };
-
-
+    if(loading)
+        return <WaitingPage></WaitingPage>
 
     return (
         <Stack alignItems={"center"}>
@@ -125,10 +96,9 @@ const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
                 onChange={(e) => setStory(e.target.value)}
                 placeholder="ספר לי בקצרה מה קרה"
             />
-                          <div>
-            <input type="file" accept="*/*" onChange={handleFileChange} />
-            <button onClick={handleSubmit}>Upload</button>
-        </div>
+            <div className="text">
+                <input className="inputFile" type="file" accept="*/*" onChange={handleFileChange} />
+            </div>
             <button className="buttonSubmit" onClick={handleButtonClick}>אישור</button>
         </Stack>
     );

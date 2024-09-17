@@ -5,9 +5,8 @@ import { Add } from '../services/tellMe.service';
 
 export function PageMiss() {
     const location = useLocation();
-    const data = location.state?.formData; // הנתונים שהעברנו
-    const navigate = useNavigate();  // כאן אנו משתמשים ב-useNavigate לצורך ניווט       
-    // ניצור state מקומי עבור הנתונים כדי לאפשר עריכה
+    const data = location.state?.formData; 
+    const navigate = useNavigate();      
     const [formData, setFormData] = useState(data);
     console.log(location.state.formData);
     
@@ -17,23 +16,16 @@ export function PageMiss() {
         
         console.log(dateString);
         
-        // החלפת כל המפרידים השונים (/, ., -) בתו -
         if(dateString!=undefined&&dateString!=""&&dateString!=null){
             const cleanedDateString = dateString.replace(/[/.-]/g, '-');
-        
-            // פיצול התאריך למרכיבים (יום, חודש, שנה)
             const [day, month, year] = cleanedDateString.split('-');
-        
-            // החזרת התאריך בפורמט YYYY-MM-DD
             return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         }
 
     };
 
-    let isoDate = normalizeDate(formData.date);  // יומר ל-YYYY-MM-DD
+    let isoDate = normalizeDate(formData.date); 
 
-
-    // פונקציה לעדכון שדות הטקסט
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({
@@ -54,7 +46,7 @@ export function PageMiss() {
     };
 
     return (
-        <div>
+        <div className='warpDiv'>
             <h1 className='h'>מעולה חסרים לנו ממש מספר פרטים כדי לסיים את התהליך</h1>
             {formData ? (
                 <div>
@@ -140,7 +132,7 @@ export function PageMiss() {
             ) : (
                 <p>No data available</p>
             )}
-           <button onClick={handleSubmit}>לחץ לאישור</button>
+           <button className='buttonSubmit' onClick={handleSubmit}>לחץ לאישור</button>
 
         </div>
     );

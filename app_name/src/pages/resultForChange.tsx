@@ -7,10 +7,8 @@ import { Add } from '../services/tellMe.service';
 
 export function ResultPageChange() {
     const location = useLocation();
-     const data = location.state?.updatedData; // הנתונים שהעברנו
-     const navigate = useNavigate();  // כאן אנו משתמשים ב-useNavigate לצורך ניווט
-
-    // ניצור state מקומי עבור הנתונים כדי לאפשר עריכה
+     const data = location.state?.updatedData;
+     const navigate = useNavigate();  
     const [formData, setFormData] = useState(data);
 
     const handleSubmit = async () => {
@@ -20,17 +18,15 @@ export function ResultPageChange() {
         
         if(formData?.date&&formData.date!=""&&formData?.age&&formData.age!=""&&formData.doctorType&&formData.doctorType!=""&&formData.hospital&&formData.hospital!=""&&formData.name&&formData.name!=""&&formData.nameFather&&formData.nameFather!=""){
             await Add(formData)
-            navigate('/submit');  // ניווט לדף שינוי עם הנתונים
+            navigate('/submit');  
         }
         else
-            navigate('/pageMiss', { state: { formData } });  // ניווט לדף שינוי עם הנתונים
+            navigate('/pageMiss', { state: { formData } }); 
     };
     console.log("formmm");
     
     console.log(formData);
     
-
-    // פונקציה לעדכון שדות הטקסט
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({
@@ -39,27 +35,17 @@ export function ResultPageChange() {
         });
     };
 
-     const normalizeDate = (dateString:String) => {
-        console.log("dateString");
+     const normalizeDate = (dateString:String) => {        
         
-        console.log(dateString);
-        
-        // החלפת כל המפרידים השונים (/, ., -) בתו -
         if(dateString!=undefined&&dateString!=""&&dateString!=null){
             const cleanedDateString = dateString.replace(/[/.-]/g, '-');
         
-            // פיצול התאריך למרכיבים (יום, חודש, שנה)
             const [day, month, year] = cleanedDateString.split('-');
-        
-            // החזרת התאריך בפורמט YYYY-MM-DD
             return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         }
 
     };
-
-// דוגמה לשימוש
-    let isoDate = normalizeDate(formData.date);  // יומר ל-YYYY-MM-DD
-
+    let isoDate = normalizeDate(formData.date); 
 
     return (
         <div className='warpDiv'>
@@ -134,7 +120,6 @@ export function ResultPageChange() {
                 <p>No data available</p>
             )}
            <button className='buttonSubmit' onClick={handleSubmit}>אישור </button>
-
         </div>
     );
 }

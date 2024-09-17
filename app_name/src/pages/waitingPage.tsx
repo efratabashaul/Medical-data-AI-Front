@@ -8,7 +8,7 @@ export function WaitingPage() {
             style={{ height: '100vh' }}
         >
             <CircularProgress />
-            <Typography variant="h6" style={{ marginTop: 20 }}>
+            <Typography variant="h6" style={{ marginTop: 20}}>
                 ממתין לבדיקת מערכת
             </Typography>
         </Stack>
