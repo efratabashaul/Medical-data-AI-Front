@@ -23,7 +23,11 @@ export function TellMe() {
             if(story==""&&fileContent==null)
                 alert('נא העלה קובץ או ספר בקצרה את מה שקרה!')
             else{
-                const newS = story + fileContent;
+                let newS;
+                if(fileContent!=null)
+                    newS = story + fileContent;
+                else
+                    newS = story;
                 const result: TellMeType = await AITellMe(newS);
                 setResult(result); 
                 navigate('/check', { state: { result } })

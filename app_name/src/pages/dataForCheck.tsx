@@ -37,10 +37,12 @@ export function ResultPageCheck() {
 
     console.log(updatedData);
     console.log(updatedData.date);
-    
+    console.log("ageeee");
+        
+    console.log(updatedData.id);
     const handleSubmit = async () => {
-
-        if(updatedData?.date&&updatedData.date!=""&&updatedData?.age&&String( updatedData.age)!=""&&updatedData.doctorType&&updatedData.doctorType!=""&&updatedData.hospital&&updatedData.hospital!=""&&updatedData.name&&updatedData.name!=""&&updatedData.nameFather&&updatedData.nameFather!=""){
+ 
+        if(updatedData?.id&&String(updatedData.id)!=""&&updatedData?.date&&updatedData.date!=""&&updatedData?.age&&String( updatedData.age)!=""&&updatedData.doctorType&&updatedData.doctorType!=""&&updatedData.hospital&&updatedData.hospital!=""&&updatedData.name&&updatedData.name!=""&&updatedData.nameFather&&updatedData.nameFather!=""){
             console.log("date:  "+updatedData?.date);
             await Add(updatedData)
             navigate('/submit')
@@ -51,15 +53,16 @@ export function ResultPageCheck() {
     };
     return (
         <div className='warpDiv'>
-            <h1 className='h'>Result Page</h1>
+            <h1 className='h'>בדיקת נתונים</h1>
             {updatedData ? (
                 <div className='text'>
-                    <p>Age: {updatedData.age}</p>
-                    <p>Date: {updatedData.date ? updatedData.date: 'No date available'}</p>
-                    <p>Doctor Type: {updatedData.doctorType}</p>
-                    <p>Hospital: {updatedData.hospital}</p>
-                    <p>Name: {updatedData.name}</p>
-                    <p>Father's Name: {updatedData.nameFather}</p>
+                  {updatedData.id&&(<p>ת.ז.: {updatedData.id}</p>)}
+                    {updatedData.age&&(<p>גיל: {updatedData.age}</p>)}
+                   {updatedData.date&&( <p>תאריך: {updatedData.date ? updatedData.date: 'No date available'}</p>)}
+                 {updatedData.doctorType&&( <p>סוג רופא: {updatedData.doctorType}</p>)}
+                   {updatedData.hospital&&( <p>בית חולים: {updatedData.hospital}</p>)}
+                    {updatedData.name&&(<p>שם: {updatedData.name}</p>)}
+                   {updatedData.nameFather&&( <p>שם האבא: {updatedData.nameFather}</p>)}
                 </div>
             ) : (
                 <p>No data available</p>

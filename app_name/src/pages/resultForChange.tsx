@@ -9,28 +9,28 @@ export function ResultPageChange() {
     const location = useLocation();
      const data = location.state?.updatedData;
      const navigate = useNavigate();  
-    const [formData, setFormData] = useState(data);
+    const [updatedData, setFormData] = useState(data);
 
     const handleSubmit = async () => {
         console.log("formData?.date");
         
-        console.log(formData?.date);
+        console.log(updatedData?.date);
         
-        if(formData?.date&&formData.date!=""&&formData?.age&&formData.age!=""&&formData.doctorType&&formData.doctorType!=""&&formData.hospital&&formData.hospital!=""&&formData.name&&formData.name!=""&&formData.nameFather&&formData.nameFather!=""){
-            await Add(formData)
+        if(updatedData?.id&&String(updatedData.id)!=""&&updatedData?.date&&updatedData.date!=""&&updatedData?.age&&updatedData.age!=""&&updatedData.doctorType&&updatedData.doctorType!=""&&updatedData.hospital&&updatedData.hospital!=""&&updatedData.name&&updatedData.name!=""&&updatedData.nameFather&&updatedData.nameFather!=""){
+            await Add(updatedData)
             navigate('/submit');  
         }
         else
-            navigate('/pageMiss', { state: { formData } }); 
+            navigate('/pageMiss', { state: {  updatedData } }); 
     };
     console.log("formmm");
     
-    console.log(formData);
+    console.log(updatedData);
     
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({
-            ...formData!,
+            ...updatedData!,
             [name]: value,
         });
     };
@@ -45,24 +45,24 @@ export function ResultPageChange() {
         }
 
     };
-    let isoDate = normalizeDate(formData.date); 
+    let isoDate = normalizeDate(updatedData.date); 
 
     return (
         <div className='warpDiv'>
-            <h1 className='h'>Result Page</h1>
-            {formData ? (
+            <h1 className='h'>שנה את הנתונים..</h1>
+            {updatedData ? (
                 <div>
                            <div>
-                        <label>Id:</label>
+                        <label>ת.ז.:</label>
                         <input
                             type="text"
                             name="id"
-                            value={formData.id}
+                            value={updatedData.id}
                             onChange={handleInputChange}
                         />
                     </div>
                            <div>
-                        <label>Date:</label>
+                        <label>תאריך:</label>
                              <input
                                  type="date"
                            name="date"
@@ -71,47 +71,47 @@ export function ResultPageChange() {
                                   />
                     </div>
                     <div>
-                        <label>Age:</label>
+                        <label>גיל:</label>
                         <input
                             type="text"
                             name="age"
-                            value={formData.age}
+                            value={updatedData.age}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div>
-                        <label>Doctor Type:</label>
+                        <label>סוג רופא:</label>
                         <input
                             type="text"
                             name="doctorType"
-                            value={formData.doctorType}
+                            value={updatedData.doctorType}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div>
-                        <label>Hospital:</label>
+                        <label>בית חולים:</label>
                         <input
                             type="text"
                             name="hospital"
-                            value={formData.hospital}
+                            value={updatedData.hospital}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div>
-                        <label>Name:</label>
+                        <label>שם:</label>
                         <input
                             type="text"
                             name="name"
-                            value={formData.name}
+                            value={updatedData.name}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div>
-                        <label>Father's Name:</label>
+                        <label>שם האבא:</label>
                         <input
                             type="text"
                             name="nameFather"
-                            value={formData.nameFather}
+                            value={updatedData.nameFather}
                             onChange={handleInputChange}
                         />
                     </div>

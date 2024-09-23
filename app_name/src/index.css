@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  direction: rtl;
+
 }
 
 code {
@@ -26,9 +28,8 @@ code {
   align-items: center;
 }
 .inputFile{
-  background-color:#F5A777 ;
+  color:#F5A777 ;
 }
 .text{
   color: #3D4873 ;
-
 }

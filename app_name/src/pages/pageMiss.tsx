@@ -5,10 +5,12 @@ import { Add } from '../services/tellMe.service';
 
 export function PageMiss() {
     const location = useLocation();
-    const data = location.state?.formData; 
+    const data = location.state?.updatedData; 
     const navigate = useNavigate();      
     const [formData, setFormData] = useState(data);
-    console.log(location.state.formData);
+    console.log("form missssmj ");
+    
+    console.log(location.state.updatedData);
     
 
     const normalizeDate = (dateString:String) => {
@@ -44,16 +46,19 @@ export function PageMiss() {
         else
             alert('נא מלא את פרטיך!')
     };
+    console.log("data.id");
+    if(data.id==null)
+        console.log(data.id);
 
     return (
         <div className='warpDiv'>
-            <h1 className='h'>מעולה חסרים לנו ממש מספר פרטים כדי לסיים את התהליך</h1>
-            {formData ? (
+            <h2 className='h'>מעולה, חסרים לנו ממש מספר פרטים כדי לסיים את התהליך</h2>
+            {data ? (
                 <div>
 
-                    {data.id == null || data.id == undefined ||data.id==""&& (
+                    {(formData.id == null || data.id == undefined ||data.id=="")&& (
                         <div>
-                        <label>Id:</label>
+                        <label>ת.ז.:</label>
                         <input
                             type="text"
                             name="id"
@@ -63,9 +68,9 @@ export function PageMiss() {
                        </div>
                      )}  
 
-                    {data.date == null || data.date == undefined ||data.date==""&& (
+                    {(data.date == null || data.date == undefined ||data.date=="")&& (
                         <div>
-                        <label>Date:</label>
+                        <label>תאריך:</label>
                         <input
                                  type="date"
                            name="date"
@@ -75,9 +80,9 @@ export function PageMiss() {
                     </div>
                      )}  
                         
-                    {data.age == null || data.age == undefined ||data.age==""&& (      
+                    {(data.age == null || data.age == undefined ||data.age=="")&& (      
                     <div>
-                        <label>Age:</label>
+                        <label>גיל:</label>
                         <input
                             type="text"
                             name="age"
@@ -86,9 +91,9 @@ export function PageMiss() {
                         />
                     </div>  
                     )}  
-                         {data.doctorType == null|| data.doctorType == undefined||data.doctorType=="" && (
+                         {(data.doctorType == null|| data.doctorType == undefined||data.doctorType=="" )&& (
                     <div>
-                        <label>Doctor Type:</label>
+                        <label>סוג רופא:</label>
                         <input
                             type="text"
                             name="doctorType"
@@ -97,9 +102,9 @@ export function PageMiss() {
                         />
                     </div> 
                      )}  
-                        {data.hospital == null || data.hospital == undefined ||data.hospital==""&& ( 
+                        {(data.hospital == null || data.hospital == undefined ||data.hospital=="")&& ( 
                     <div>
-                        <label>Hospital:</label>
+                        <label>בית חולים:</label>
                         <input
                             type="text"
                             name="hospital"
@@ -107,9 +112,9 @@ export function PageMiss() {
                             onChange={handleInputChange}
                         />
                     </div>  )}  
-                    {data.name == null ||data.name == undefined ||data.name==""&& (
+                    {(data.name == null ||data.name == undefined ||data.name=="")&& (
                     <div>
-                        <label>Name:</label>
+                        <label>שם:</label>
                         <input
                             type="text"
                             name="name"
@@ -117,9 +122,9 @@ export function PageMiss() {
                             onChange={handleInputChange}
                         />
                     </div>  )}  
-                    {data.nameFather == null ||data.nameFather== undefined ||data.nameFather==""&& ( 
+                    {(data.nameFather == null ||data.nameFather== undefined ||data.nameFather=="")&& ( 
                     <div>
-                        <label>Father's Name:</label>
+                        <label>שם האבא:</label>
                         <input
                             type="text"
                             name="nameFather"
